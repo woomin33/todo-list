@@ -1,20 +1,29 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import './TodoItem.css'
+import { DELETE_TODO, TOGGLE_TODO, UPDATE_TODO } from '../reducer';
+import { TodoContext } from '../context';
 
-function TodoItem({ id, text, completed, onToggle, onDelete, onUpdate }) {
+function TodoItem({ id, text, completed }) {
+  const { dispatch } = useContext(TodoContext);
   const [edit, setEdit] = useState(false);
   const handleEdit = () => {
     setEdit((prev) => !prev)
   }
   const handleChange = (e) => {
-    onUpdate(id, e.target.value)
+    dispatch({type: UPDATE_TODO, payload: {id, text: e.target.value}})
+  }
+  const handleToggle = () => {
+    dispatch({type: TOGGLE_TODO, payload: id})
+  }
+  const handleDelete = () => {
+    dispatch({type: DELETE_TODO, payload: id})
   }
   return (
     <div className='todo-item'>
-      <input type="checkbox" className='todo-item-checkbox' checked={completed} onChange={onToggle} />
+      <input type="checkbox" className='todo-item-checkbox' checked={completed} onChange={handleToggle} />
       {edit ? <input className='todo-edit-input' value={text} onChange={handleChange} /> : <p className={['todo-item-text', completed && 'completed'].join(' ')}>{text}</p>}
       <button className='todo-item-button' onClick={handleEdit}>수정</button>
-      <button className='todo-item-button' onClick={onDelete}>삭제</button>
+      <button className='todo-item-button' onClick={handleDelete}>삭제</button>
     </div>
   )
 }
