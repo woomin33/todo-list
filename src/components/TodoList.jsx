@@ -1,8 +1,13 @@
 import { useContext } from 'react';
-import TodoItem from './TodoItem'
-import './TodoList.css'
+import TodoItem from './TodoItem';
 import { TodoContext } from '../context';
-import { DELETE_TODO_COMPLETED, TOGGLE_TODO, TOGGLE_TODO_ALL } from '../reducer';
+import { DELETE_TODO_COMPLETED, TOGGLE_TODO_ALL } from '../reducer';
+
+const listClassName = `border-[1px] border-solid border-gray-500 rounded-[6px] mt-[16px]`
+const headerClassName = `flex items-center h-[40px] px-[12px] py-[0px] gap-[12px]`
+const checkboxClassName = `w-[16px] h-[16px]`
+const textClassName = `grow`
+const buttonClassName = `border-[1px] border-solid border-gray-500 rounded-[6px] bg-transparent px-[12px] py-[0px] text-black shrink h-[30px]`
 
 function TodoList() {
   const {state, dispatch} = useContext(TodoContext);
@@ -26,12 +31,12 @@ function TodoList() {
   })
   const isAllCompleted = filteredList.length > 0 && filteredList.every((item) => item.completed);
   return (
-    <div className='todo-list'>
-      <div className='todo-header'>
-        <input type='checkbox' className='todo-checkbox' checked={isAllCompleted} onChange={handleToggleAll}/>
-        <p className='todo-header-text'>전체 선택</p>
+    <div className={listClassName}>
+      <div className={headerClassName}>
+        <input type='checkbox' className={checkboxClassName} checked={isAllCompleted} onChange={handleToggleAll}/>
+        <p className={textClassName}>전체 선택</p>
         {completedCount > 0 &&
-        <button className='todo-header-button' onClick={handleDeleteCompleted}>{completedCount}개 선택 삭제</button>
+        <button className={buttonClassName} onClick={handleDeleteCompleted}>{completedCount}개 선택 삭제</button>
         }
       </div>
       <div>

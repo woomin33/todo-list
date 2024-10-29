@@ -1,8 +1,8 @@
-import './Title.css'
+
 
 function Title() {
   return (
-    <h1 className='title'>To-Do List</h1>
+    <h1 className='text-2xl mb-[16px]'>To-Do List</h1>
   )
 }
 
