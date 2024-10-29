@@ -1,74 +1,61 @@
-import { useRef, useState } from "react"
+import { useEffect, useReducer } from "react"
 import Controls from "./components/Controls"
 import Layout from "./components/Layout"
 import Title from "./components/Title"
 import TodoList from "./components/TodoList"
+import { ADD_TODO, DELETE_TODO, DELETE_TODO_COMPLETED, init, initialState, reducer, SET_FILTER, TOGGLE_TODO, TOGGLE_TODO_ALL, UPDATE_TODO } from "./reducer"
 
 function App() {
-  //          state: 아이디 참조 상태          //
-  const idRef = useRef(0);
-  //          state: 할일 리스트 상태          //
-  const [list, setList] = useState([]);
-  //          state: 필터 종류 상태          //
-  const [filterType, setFilterType] = useState("ALL")
+  const [state, dispatch] = useReducer(reducer, initialState, init)
+  
+  useEffect(() => {
+    window.localStorage.setItem('TODO', JSON.stringify(state.list))
+    window.localStorage.setItem('ID', JSON.stringify(state.id))
+  })
   //          function: 필터 종류 변경 이벤트 처리 함수          //
-  const handleChangeFilterType = (filter) => {
-    setFilterType(filter)
+  const handleChangeFilterType = (type) => {
+    dispatch({ type: SET_FILTER, payload: type})
   }
   //          function: TodoItem 추가 이벤트 처리 함수          //
   const handleSubmit = (value) => {
-    setList((prevList) => 
-      prevList.concat({
-        id: (idRef.current += 1),
-        text: value,
-        completed: false,
-      })
-    )
+    dispatch({ type: ADD_TODO, payload: value})
   }
   //          function: TodoItem 체크 변경 이벤트 처리 함수          //
   const handleToggle = (id) => {
-    setList((prevList) => prevList.map(item => {
-      if(item.id === id) {
-        return {...item, completed: !item.completed}
-      }
-      return item
-    }))
+    dispatch({ type: TOGGLE_TODO, payload: id})
   }
   //          function: TodoItem 전체 변경 이벤트 처리 함수          //
   const handleToggleAll = (flag) => {
-    setList((prevList) => prevList.map(item => ({...item, completed: flag})))
+    dispatch({ type: TOGGLE_TODO_ALL, payload: flag})
   }
   //          function: TodoItem 삭제 이벤트 처리 함수          //
   const handleDelete = (id) => {
-    setList((prevList) => prevList.filter(item => item.id !== id))
+    dispatch({ type: DELETE_TODO, payload: id})
   }
   //          function: TodoItem 삭제 완료 이벤트 처리 함수          //
   const handleDeleteCompleted = () => {
-    setList((prevList) => prevList.filter((item) => !item.completed))
+    dispatch({ type: DELETE_TODO_COMPLETED})
   }
   //          function: TodoItem 수정 이벤트 처리 함수          //
   const handleUpdate = (id, text) => {
-    setList((prevList) => prevList.map((item) => {
-      if(item.id === id){
-        return { ...item, text }
-      }
-      return item
-    }))
+    dispatch({ type: UPDATE_TODO, payload: {id, text} })
   }
-  const filteredList = list.filter((item) => {
-    if(filterType === "ALL"){
-      return item;
-    } else if(filterType === "TODO"){
-      return !item.completed
-    } else{
-      return item.completed
+
+  const filteredList = state.list.filter((item) => {
+    switch (state.filterType){
+      case "TODO":
+        return !item.completed
+      case "COMPLETED":
+        return item.completed
+      default:
+        return true
     }
   })
   //          render: Application 컴포넌트 렌더링          //
   return (
     <Layout>
         <Title />
-        <Controls filterType={filterType} onChangeFilterType={handleChangeFilterType} onSubmit={handleSubmit}/>
+        <Controls filterType={state.filterType} onChangeFilterType={handleChangeFilterType} onSubmit={handleSubmit}/>
         <TodoList data={filteredList} onToggle={handleToggle} onToggleAll={handleToggleAll} onDelete={handleDelete} onDeleteCompleted={handleDeleteCompleted} onUpdate={handleUpdate}/>
       </Layout>
 

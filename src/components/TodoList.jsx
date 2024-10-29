@@ -15,7 +15,7 @@ function TodoList({ data, onToggle, onToggleAll, onDelete, onDeleteCompleted, on
       </div>
       <div>
         {data.map((item) => (
-          <TodoItem id={item.id} text={item.text} completed={item.completed} onToggle={() => onToggle(item.id)} onDelete={() => onDelete(item.id)} onUpdate={onUpdate} />
+          <TodoItem key={item.id} id={item.id} text={item.text} completed={item.completed} onToggle={() => onToggle(item.id)} onDelete={() => onDelete(item.id)} onUpdate={onUpdate} />
         ))}
       </div>
     </div>
