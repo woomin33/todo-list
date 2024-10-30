@@ -10,15 +10,19 @@ const inputClassName = `grow border-[1px] border-solid border-gray-500 rounded-[
 
 function TodoItem({ id, text, completed }) {
   const dispatch = useDispatch()
+  const [newText, setNewText] = useState(text)
   const [edit, setEdit] = useState(false);
   const handleEdit = () => {
+    if(edit){
+      dispatch(updateTodo({ id, text: newText}))
+    }
     setEdit((prev) => !prev)
   }
   const handleChange = (e) => {
-    dispatch(updateTodo({ id, text: e.target.value}))
+    setNewText(e.target.value)
   }
   const handleToggle = () => {
-    dispatch(toggleTodo(id))
+    dispatch(toggleTodo({id, completed: !completed}))
   }
   const handleDelete = () => {
     dispatch(deleteTodo(id))
@@ -26,7 +30,7 @@ function TodoItem({ id, text, completed }) {
   return (
     <div className={itemClassName}>
       <input type="checkbox" className={checkboxClassName} checked={completed} onChange={handleToggle} />
-      {edit ? <input className={inputClassName} value={text} onChange={handleChange} /> : <p className={[textClassName, completed && 'line-through'].join(' ')}>{text}</p>}
+      {edit ? <input className={inputClassName} value={newText} onChange={handleChange} /> : <p className={[textClassName, completed && 'line-through'].join(' ')}>{text}</p>}
       <button className={buttonClassName} onClick={handleEdit}>수정</button>
       <button className={buttonClassName} onClick={handleDelete}>삭제</button>
     </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import { addTodo, setFilter } from '../store/todoSlice';
+import { createTodo, setFilter } from '../store/todoSlice';
 
 const inputClassName = `grow border-[1px] border-solid border-gray-500 rounded-[6px] bg-transparent px-[12px] py-[4px] text-[14px] leading-[20px] text-black`
 const commonClassName = `border-[1px] border-solid border-gray-500 rounded-[6px] bg-transparent px-[12px] py-[4px] text-[14px] leading-[20px] text-black`
@@ -13,7 +13,7 @@ function Controls() {
     setText(e.target.value)
   }
   const handleSubmit = () => {
-    dispatch(addTodo(text))
+    dispatch(createTodo(text))
     setText("");
   }
   const handleChangeFilterType = (e) => {
