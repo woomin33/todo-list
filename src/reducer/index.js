@@ -10,7 +10,7 @@ export const init = () => {
   const savedTodo = JSON.parse(window.localStorage.getItem("TODO"))
   const savedID = JSON.parse(window.localStorage.getItem("ID"))
   return {
-    list: savedTodo,
+    list: savedTodo || [],
     id: savedID ? Number(savedID) : 0,
     filterType: "ALL"
   }
