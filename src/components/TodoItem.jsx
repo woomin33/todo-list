@@ -1,6 +1,6 @@
-import { useContext, useState } from 'react'
-import { DELETE_TODO, TOGGLE_TODO, UPDATE_TODO } from '../reducer';
-import { TodoContext } from '../context';
+import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { deleteTodo, toggleTodo, updateTodo } from '../store/todoSlice';
 
 const itemClassName = `flex items-center h-[65px] gap-[12px] px-[12px] py-[0px]`
 const checkboxClassName = `w-[16px] h-[16px]`
@@ -9,19 +9,19 @@ const buttonClassName = `w-[32px] h-[30px] bg-white text-black border-none`
 const inputClassName = `grow border-[1px] border-solid border-gray-500 rounded-[6px] bg-transparent px-[12px] py-[4px] text-[14px] leading-[20px] text-black `
 
 function TodoItem({ id, text, completed }) {
-  const { dispatch } = useContext(TodoContext);
+  const dispatch = useDispatch()
   const [edit, setEdit] = useState(false);
   const handleEdit = () => {
     setEdit((prev) => !prev)
   }
   const handleChange = (e) => {
-    dispatch({type: UPDATE_TODO, payload: {id, text: e.target.value}})
+    dispatch(updateTodo({ id, text: e.target.value}))
   }
   const handleToggle = () => {
-    dispatch({type: TOGGLE_TODO, payload: id})
+    dispatch(toggleTodo(id))
   }
   const handleDelete = () => {
-    dispatch({type: DELETE_TODO, payload: id})
+    dispatch(deleteTodo(id))
   }
   return (
     <div className={itemClassName}>
